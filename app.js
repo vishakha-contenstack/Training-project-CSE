@@ -1,39 +1,31 @@
-const apiKey = 'bltba35d3f170d67097';  // your API key
+const apiKey = 'bltba35d3f170d67097';  // your stack API key
 const accessToken = 'cs8991dbc60e6ef188b7f61eac'; // your delivery token
 const environment = 'development';
-const entryUID = 'blt3acaa2c850ca1f1c'; 
+const entryUID = 'blt3acaa2c850ca1f1c';  // homepage entry UID
 const contentType = 'blog_post';
 
 const url = `https://cdn.contentstack.io/v3/content_types/${contentType}/entries/${entryUID}?environment=${environment}`;
 
-// ✅ Utility: Render JSON RTE into HTML
+// --- Utility: render JSON RTE into HTML ---
 function renderJsonRTE(node) {
   if (!node) return "";
-
-  // If it's plain text
   if (node.text) return node.text;
 
   switch (node.type) {
-    case "p":
-      return `<p>${node.children.map(renderJsonRTE).join("")}</p>`;
-    case "h1":
-      return `<h1>${node.children.map(renderJsonRTE).join("")}</h1>`;
-    case "h2":
-      return `<h2>${node.children.map(renderJsonRTE).join("")}</h2>`;
-    case "ul":
-      return `<ul>${node.children.map(renderJsonRTE).join("")}</ul>`;
-    case "ol":
-      return `<ol>${node.children.map(renderJsonRTE).join("")}</ol>`;
-    case "li":
-      return `<li>${node.children.map(renderJsonRTE).join("")}</li>`;
+    case "p": return `<p>${node.children.map(renderJsonRTE).join("")}</p>`;
+    case "h1": return `<h1>${node.children.map(renderJsonRTE).join("")}</h1>`;
+    case "h2": return `<h2>${node.children.map(renderJsonRTE).join("")}</h2>`;
+    case "ul": return `<ul>${node.children.map(renderJsonRTE).join("")}</ul>`;
+    case "ol": return `<ol>${node.children.map(renderJsonRTE).join("")}</ol>`;
+    case "li": return `<li>${node.children.map(renderJsonRTE).join("")}</li>`;
     case "a":
       return `<a href="${node.attrs?.url}" target="_blank">${node.children.map(renderJsonRTE).join("")}</a>`;
     default:
-      if (node.children) return node.children.map(renderJsonRTE).join("");
-      return "";
+      return node.children ? node.children.map(renderJsonRTE).join("") : "";
   }
 }
 
+// --- Fetch entry from Contentstack ---
 fetch(url, {
   headers: {
     api_key: apiKey,
@@ -45,56 +37,73 @@ fetch(url, {
     const entry = data.entry;
 
     // Title
-    document.getElementById('title').textContent = entry.title;
+    document.getElementById("title").textContent = entry.title;
 
     // Featured Image
-    const img = document.getElementById('featured-image');
-    if (entry.featured_image && entry.featured_image.url) {
-      img.src = entry.featured_image.url;
-      img.alt = entry.featured_image.title || entry.title;
-    } else {
-      img.style.display = 'none';
+  const banner = document.getElementById("featured-image");
+if (banner && entry.featured_image?.url) {
+  banner.src = entry.featured_image.url;
+  banner.alt = entry.featured_image.title || "Banner";
+} else if (banner) {
+  banner.style.display = "none";
+}
+
+    // Body
+    if (entry.body?.children) {
+      const bodyHTML = entry.body.children.map(renderJsonRTE).join("");
+      document.getElementById("body").innerHTML = bodyHTML;
     }
 
-    // Body (render JSON RTE properly)
-    if (entry.body && entry.body.children) {
-      const bodyHTML = entry.body.children.map(renderJsonRTE).join("");
-      document.getElementById('body').innerHTML = bodyHTML;
-    } else {
-      document.getElementById('body').textContent = "No content available.";
+    // Feedbacks
+    const feedbackContainer = document.createElement("section");
+    feedbackContainer.innerHTML = "<h2>💬 Customer Feedback</h2>";
+    feedbackContainer.id = "feedback-section";
+
+    // Convert feedback strings into readable text
+    const feedbacks = [];
+    if (entry.feedbacks) {
+      Object.values(entry.feedbacks).forEach(feedbackStr => {
+        try {
+          // Try to parse if it looks like JSON; otherwise, use plain text
+          if (feedbackStr.startsWith("{") || feedbackStr.startsWith("[")) {
+            const parsed = JSON.parse(feedbackStr);
+            feedbacks.push(...Object.values(parsed));
+          } else {
+            feedbacks.push(feedbackStr);
+          }
+        } catch {
+          feedbacks.push(feedbackStr);
+        }
+      });
+    }
+
+    // Render feedbacks dynamically
+    if (feedbacks.length) {
+      const feedbackList = document.createElement("div");
+      feedbackList.className = "feedback-grid";
+
+      feedbacks.forEach((fb) => {
+        const fbDiv = document.createElement("div");
+        fbDiv.className = "feedback-card";
+        fbDiv.innerHTML = `<p>${fb}</p>`;
+        feedbackList.appendChild(fbDiv);
+      });
+
+      feedbackContainer.appendChild(feedbackList);
+      document.querySelector("main").appendChild(feedbackContainer);
     }
 
     // Footer
-    document.getElementById('footer').textContent = entry.footer || "";
+    const footer = document.getElementById("footer");
+    footer.textContent = entry.footer || "";
+
+    // Personalized Greeting (if logged in)
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (user) {
+      footer.innerHTML += `<br>👋 Welcome back, <strong>${user.first_name}</strong>!`;
+    }
   })
   .catch(err => {
-    console.error('Failed to fetch entry:', err);
-    document.getElementById('title').textContent = 'Failed to load blog post.';
+    console.error("Error fetching entry:", err);
+    document.getElementById("title").textContent = "Failed to load content.";
   });
-
-  // Personalized greeting if user is signed up
-// Personalized greeting if user is logged in
-const user = JSON.parse(localStorage.getItem("user"));
-const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-const footer = document.getElementById("footer");
-
-if (user && isLoggedIn) {
-  footer.innerHTML = `👋 Hey <strong>${user.firstName}</strong>! Welcome back to your Contentstack world 🚀
-    <br><button id="logout-btn" class="logout-btn">Logout</button>`;
-} else if (user && !isLoggedIn) {
-  footer.innerHTML = `👋 Hi <strong>${user.firstName}</strong>! You’re signed up but not logged in. <a href="login.html">Log in here</a>`;
-} else {
-  footer.innerHTML = `👋 Hey there! <a href="login.html">Log in</a> or <a href="signup.html">Sign up</a> to personalize your experience.`;
-}
-
-// Logout functionality
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("isLoggedIn");
-    alert("👋 You’ve been logged out!");
-    window.location.reload();
-  });
-}
-
-

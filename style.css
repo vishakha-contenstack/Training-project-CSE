@@ -1,66 +1,142 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-:root{
-   --accent-color: #82ccee;
-    --text-color: black;
-    --input-color: wheat;
-    --base-color: white;
+/* ===== Google Font ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+/* ===== Root Colors ===== */
+:root {
+  --primary-blue: #00b2ff;
+  --light-blue: #e6f3ff;
+  --accent-blue: #0078ff;
+  --white: #ffffff;
+  --text-dark: #222;
+  --text-muted: #555;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
-*{
-    margin: 0;
-    padding: 0;
+
+/* ===== Global Styles ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(180deg, var(--light-blue), var(--white));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  color: var(--text-dark);
+  overflow: hidden;
 }
-html{
-    font-family: Poppins;
-    font-size: 12pt;
-    color: var(--text-color);
-    text-align: center;
+
+/* ===== Signup Card ===== */
+.wrapper {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px var(--shadow);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  padding: 35px 30px 45px;
+  box-sizing: border-box;
+  animation: fadeIn 0.8s ease-in-out;
+  transform: translateY(-10px);
 }
-body{
-    min-height: 100vh;
-    background-image: url(images/pexels-alena-koval-233944-886521\ \(1\).jpg);
-    background-size: cover;
-    background-position: right;
+
+/* ===== Hero Image ===== */
+#hero-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 25px;
+  box-shadow: 0 6px 15px var(--shadow);
 }
-.wrapper{
-    background-color: var(--base-color);
-    height: 100vh;
-    width: max(30%, 600px);
-    padding: 10px;
-    border-radius: 0 20px 20px 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+
+/* ===== Headings ===== */
+h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
 }
-h1{
-    font-size: 3rem;
-    font-weight: 900;
-    text-transform: uppercase;
+
+#intro {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 25px;
 }
-form{
-    width: min(400px, 100%);
-    margin-top: 20px;
-    margin-bottom: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+
+/* ===== Form Styling ===== */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
 }
-form > div{
-    width: 100%;
-    display: flex;
-    justify-content: center;
+
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d8e3f0;
+  background-color: var(--light-blue);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  color: var(--text-dark);
 }
-form label{
-    flex-shrink: 0;
-    height: 50px;
-    width: 50px;
-    background-color: var(--accent-color);
-    fill: var(--base-color);
-    border-radius: 10px 0 0 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  background-color: var(--white);
+  box-shadow: 0 0 6px rgba(0, 120, 255, 0.3);
+}
+
+/* ===== Button Styling ===== */
+button {
+  background: var(--accent-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 10px rgba(0, 120, 255, 0.3);
+}
+
+button:hover {
+  background: var(--primary-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 120, 255, 0.35);
+}
+
+/* ===== Footer Text ===== */
+#footer {
+  margin-top: 25px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+#footer a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+#footer a:hover {
+  text-decoration: underline;
+  color: var(--primary-blue);
+}
+
+/* ===== Subtle Animation ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
 }
