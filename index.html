@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  
-  <title>My Contentstack Homepage</title>
-   <link rel="stylesheet" href="app.css">
-   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+  <title>My Book Haven</title>
 
+  <link rel="stylesheet" href="app.css">
 
-   
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
+
   <header>
-    
     <h1 id="title">Loading...</h1>
-     <nav>
+    <nav>
       <a href="index.html">Home</a> |
       <a href="json-rte-tutorial.html">Tutorial</a> |
       <a href="signup.html">Sign Up</a> |
-       <a href="login.html" id="login-link">Login</a>
+      <a href="login.html" id="login-link">Login</a> |
+      <a href="author.html">Author</a>
     </nav>
   </header>
 
@@ -27,13 +27,22 @@
 
   <main>
     <div id="body"></div>
+
+    <!-- NEW Latest Books section -->
+    <section id="latest-books-section">
+      <h2>📚 Latest Books</h2>
+      <div id="latest-books-container"></div>
+    </section>
   </main>
 
   <footer>
     <p id="footer"></p>
-
   </footer>
 
+  <!-- Removed Live Preview scripts -->
+
+  <!-- Only your app.js now -->
   <script src="app.js"></script>
+
 </body>
 </html>
